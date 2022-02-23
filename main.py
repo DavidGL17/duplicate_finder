@@ -10,6 +10,9 @@ import os
 import sys
 import hashlib
 from collections import defaultdict
+import json
+
+from argparse import ArgumentParser
 
 
 def chunk_reader(fobj, chunk_size=1024):
@@ -36,7 +39,9 @@ def check_for_duplicates(paths):
     files_by_size = defaultdict(list)
     files_by_small_hash = defaultdict(list)
     files_by_full_hash = dict()
-
+    duplicates_file = defaultdict(list)
+    
+    print('Looading files by file size...')
     for path in paths:
         for dirpath, _, filenames in os.walk(path):
             for filename in filenames:
@@ -51,6 +56,7 @@ def check_for_duplicates(paths):
                     continue
                 files_by_size[file_size].append(full_path)
 
+    print('Analysing files with same size...')
     # For all files with the same file size, get their hash on the first 1024 bytes
     for file_size, files in files_by_size.items():
         if len(files) < 2:
@@ -64,6 +70,7 @@ def check_for_duplicates(paths):
                 continue
             files_by_small_hash[(file_size, small_hash)].append(filename)
 
+    print('Analysing files with same size and same starting hash...')
     # For all files with the hash on the first 1024 bytes, get their hash on the full
     # file - collisions will be duplicates
     for files in files_by_small_hash.values():
@@ -80,13 +87,29 @@ def check_for_duplicates(paths):
 
             if full_hash in files_by_full_hash:
                 duplicate = files_by_full_hash[full_hash]
-                print("Duplicate found:\n - %s\n - %s\n" % (filename, duplicate))
+                #print("Duplicate found:\n - %s\n - %s\n" % (filename, duplicate))
+                duplicates_file[filename].append(duplicate)
             else:
                 files_by_full_hash[full_hash] = filename
+    
+    # If the file name exists, write a JSON string into the file.
+    with open("found_duplicates.json", 'w') as f:
+        json.dump(duplicates_file, f)
 
+parser = ArgumentParser()
+parser.add_argument("-d", "--delete", help="If the program should delete after searching for duplicates.", action='store_true', dest="delete")
+parser.add_argument("-s", "--skip", help="The program will not search for the duplicates but will use the found_duplicates.json file", action='store_true', dest="skip")
+parser.add_argument("-p", "--paths", nargs='+', required=True, dest="paths")
+parser.add_argument("--skip-delete", nargs="*", dest="skip_paths")
 
 if __name__ == "__main__":
-    if sys.argv[1:]:
-        check_for_duplicates(sys.argv[1:])
-    else:
-        print("Usage: %s <folder> [<folder>...]" % sys.argv[0])
+    args = parser.parse_args()
+    print(args)
+    if not args.skip:
+        check_for_duplicates(args.paths)
+    if args.delete:
+        if os.path.exists('found_duplicates.json'):
+            pass
+        else:
+            print('Error duplicate file does not exist')
+
