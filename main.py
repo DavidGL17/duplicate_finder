@@ -11,6 +11,7 @@ import sys
 import hashlib
 from collections import defaultdict
 import json
+from send2trash import send2trash
 
 from argparse import ArgumentParser
 
@@ -102,14 +103,32 @@ parser.add_argument("-s", "--skip", help="The program will not search for the du
 parser.add_argument("-p", "--paths", nargs='+', required=True, dest="paths")
 parser.add_argument("--skip-delete", nargs="*", dest="skip_paths")
 
+def pathIsInSkipPaths(path, skip_paths):
+    for skipPath in skip_paths:
+        if skipPath in path:
+            return True
+    return False
+
 if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
     if not args.skip:
         check_for_duplicates(args.paths)
     if args.delete:
+        print('Starting to delete')
         if os.path.exists('found_duplicates.json'):
-            pass
+            with open('found_duplicates.json') as json_file:
+                dump_folder = r"C:\$Recycle.Bin\\"
+                data = json.load(json_file)
+                for original, copy in data.items():
+                    try:
+                        if not pathIsInSkipPaths(copy, args.skip_paths):
+                            send2trash(copy)
+                    except OSError:
+                        # File was already deleted
+                        continue
+
         else:
             print('Error duplicate file does not exist')
+
 
