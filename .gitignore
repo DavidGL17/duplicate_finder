@@ -1,1 +1,7 @@
-found_duplicates.json
+# folders
+**/.vscode
+.venv
+webp_converter/testing_dir
+
+# files
+duplicate_finder/found_duplicates.json
