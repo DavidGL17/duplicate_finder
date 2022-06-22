@@ -1,3 +1,4 @@
+#!/bin/bash
 echo "Checking for gnome-shell-extension-installer..."
 if [[ ! -f "/usr/bin/gnome-shell-extension-installer" ]]; then
    wget -O gnome-shell-extension-installer "https://github.com/brunelli/gnome-shell-extension-installer/raw/master/gnome-shell-extension-installer"
