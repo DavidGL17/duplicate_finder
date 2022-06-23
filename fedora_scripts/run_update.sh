@@ -6,3 +6,4 @@ echo 'Checking for obsolete packages...'
 sudo dnf autoremove
 echo 'Checking updates in gnome extensions...'
 gnome-shell-extension-installer --yes --update
+echo 'Everything was updated!'

@@ -8,3 +8,4 @@ sudo apt-get autoremove
 sudo apt-get autoclean
 echo 'Checking updates in gnome extensions...'
 gnome-shell-extension-installer --yes --update
+echo 'Everything was updated!'
