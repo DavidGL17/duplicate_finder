@@ -9,3 +9,6 @@ sudo apt-get autoclean
 echo 'Checking updates in gnome extensions...'
 gnome-shell-extension-installer --yes --update
 echo 'Everything was updated!'
+if [[ -f /var/run/reboot-required ]]; then
+    echo 'Reboot required'
+fi
