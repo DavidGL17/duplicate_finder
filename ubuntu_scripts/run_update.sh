@@ -6,6 +6,7 @@ sudo apt-get dist-upgrade
 echo 'Checking for obsolete packages...'
 sudo apt-get autoremove
 sudo apt-get autoclean
+sudo apt-get clean
 echo 'Checking updates in gnome extensions...'
 gnome-shell-extension-installer --yes --update
 echo 'Everything was updated!'
