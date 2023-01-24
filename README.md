@@ -12,3 +12,4 @@ This is mainly a personal project, but all contribution is welcomed, and you can
 -   [Fedora scripts](fedora_scripts/README.md) various misc scripts for my fedora computer
 -   [Ubuntu scripts](ubuntu_scripts/README.md) various misc scripts for my ubuntu machines
 -   [Webp converter](webp_converter/README.md) a script for converting all webp image files into png
+-   [Jpg to pdf converter](jpg_to_pdf_converter/README.md) a script for converting all jpg image files in a folder to a single pdf file
